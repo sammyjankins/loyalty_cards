@@ -1,0 +1,26 @@
+{% extends "cards/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="card text-center">
+        <div class="card-body">
+
+
+            <div class="container">
+                <form method='post'>
+                    {% csrf_token %}
+                    <fieldset>
+                        <h3 class="mb-4">Заполните поля формы</h3>
+                        {{ form|crispy }}
+                    </fieldset>
+                    <div class="form-group">
+                        <button class="btn btn-outline-info mt-3" type="submit">Сгенерировать</button>
+                    </div>
+                </form>
+            </div>
+
+
+        </div>
+    </div>
+
+
+{% endblock content %}

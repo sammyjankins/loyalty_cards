@@ -1,0 +1,24 @@
+{% extends "cards/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+
+    <div class="card px-4 py-4">
+        <h3 class="card-title text-center">Выход</h3>
+        <div class="container">
+
+            <h2>Вы вышли из своего аккаунта</h2>
+
+            <div class="border-top pt-3">
+                <small class="text-muted">
+                    Хотите вернуться?
+                    <a class="ml-2 text-info text-decoration-none" href="{% url 'login' %}">
+                        Пройдите по ссылке чтобы войти</a>
+                </small>
+            </div>
+
+        </div>
+    </div>
+
+
+{% endblock content %}

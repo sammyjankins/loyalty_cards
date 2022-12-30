@@ -1,0 +1,140 @@
+{% load static %}
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    {% if title %}
+        <title>{{ title }}</title>
+    {% else %}
+        <title>Карты</title>
+    {% endif %}
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{% static "cards/css/style.css" %}">
+    <script src="https://kit.fontawesome.com/00a44df5dc.js" crossorigin="anonymous"></script>
+
+</head>
+<body>
+
+<div class="page-holder bg-cover">
+
+
+    <nav class="navbar navbar-expand-lg bg-light">
+        <div class="container-fluid">
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02"
+                    aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="{% url "index" %}">Главная</a>
+                    </li>
+                </ul>
+
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="{% url "card-generator" %}">Генерация карт</a>
+                    </li>
+                </ul>
+
+                <ul class="navbar-nav  mb-2 mb-lg-0">
+
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'logout' %}">Выход</a>
+                        </li>
+                    {% else %}
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">Вход</a>
+                        </li>
+                    {% endif %}
+
+                </ul>
+
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="container-fluid pt-5">
+        <div class="row">
+            <div class="col"></div>
+
+            <div class="col-lg-8 col-sm-12">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}"> {{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+
+
+                {% block content %}{% endblock %}
+
+                {% if is_paginated %}
+                    <div class="btn-toolbar mb-4" role="toolbar" aria-label="Toolbar with button groups">
+                        {% if page_obj.has_previous %}
+                            <a class="page-link text-dark text-decoration-none" href="?page=1">Первая</a>
+                            <a class="page-link text-dark text-decoration-none"
+                               href="?page={{ page_obj.previous_page_number }}"><-</a>
+                        {% endif %}
+                        {% for num in page_obj.paginator.page_range %}
+                            {% if page_obj.number == num %}
+                                <a class="page-link text-dark text-decoration-none" href="?page={{ num }}">{{ num }}</a>
+                            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                <a class="page-link text-dark text-decoration-none" href="?page={{ num }}">{{ num }}</a>
+
+                            {% endif %}
+                        {% endfor %}
+                        {% if page_obj.has_next %}
+                            <a class="page-link text-dark text-decoration-none"
+                               href="?page={{ page_obj.next_page_number }}">-></a>
+                            <a class="page-link text-dark text-decoration-none"
+                               href="?page={{ page_obj.paginator.num_pages }}">Последняя</a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+
+            </div>
+            <div class="col"></div>
+        </div>
+
+    </div>
+
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js"></script>
+
+<script>
+    $(document).ready(function ($) {
+        $(".table-link-child").click(function () {
+            window.document.location = $(this).parent().data("href");
+        });
+    });
+    $(document).ready(function ($) {
+        $(".table-link").click(function () {
+            window.document.location = $(this).data("href");
+        });
+    });
+</script>
+
+
+<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css"
+      rel="stylesheet" type="text/css"/>
+
+</body>
+
+</html>

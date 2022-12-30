@@ -1,0 +1,21 @@
+{% extends "cards/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+
+    <div class="card px-4 py-4">
+        <h3 class="card-title text-center">Вход</h3>
+        <div class="container">
+
+            <form class="mb-3"
+                  action="{% url 'login' %}" method="POST">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <input class="btn btn-outline-dark mt-3" type="submit" value="Login">
+            </form>
+
+        </div>
+    </div>
+
+
+{% endblock content %}

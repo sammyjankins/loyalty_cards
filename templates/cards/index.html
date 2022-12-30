@@ -1,0 +1,115 @@
+{% extends "cards/base.html" %}
+{% block content %}
+
+    <div class="card text-center">
+        <div class="card-body">
+
+
+            <h1 class="card-title">Список карт</h1>
+
+            <hr>
+            <a class="btn btn-outline-info btn-lg" data-bs-toggle="collapse" href="#filterset"
+               role="button" aria-expanded="false" aria-controls="filterset"><i class="fa-solid fa-sliders"></i></a>
+            <div class="collapse multi-collapse" id="filterset">
+                <form class="row g-3 mt-2" method="GET" action="{% url 'index' %}">
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" id="inputSeries" placeholder="Серия"
+                               aria-label="series" name="series" value={{ form.data.series }}>
+                    </div>
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" id="inputNuber" placeholder="Номер"
+                               aria-label="number" name="number__icontains" value={{ form.data.number__icontains }}>
+                    </div>
+                    <div class="col-md-4">
+                        <select id="inputState" class="form-select"
+                                aria-label="status" name="status">
+                            {% if form.data.status == 'true' %}
+                                <option selected>Активна</option>
+                            {% elif form.data.status == 'false' %}
+                                <option selected>Неактивна</option>
+                            {% else %}
+                                <option selected>Статус</option>
+                            {% endif %}
+                            <option value="true">Активна</option>
+                            <option value="false">Неактивна</option>
+                        </select>
+                    </div>
+                    <div class="col-6">
+                        <label for="inputReleasedMin" class="form-label">Дата выпуска от</label>
+                        <input type="datetime-local" class="form-control" id="inputReleasedMin"
+                               name="date_released_after" value={{ form.data.date_released_after }}>
+                    </div>
+                    <div class="col-6">
+                        <label for="inputReleasedMax" class="form-label">Дата выпуска до</label>
+                        <input type="datetime-local" class="form-control" id="inputReleasedMax"
+                               name="date_released_before" value={{ form.data.date_released_before }}>
+                    </div>
+
+                    <div class="col-6">
+                        <label for="inputExpirationMin" class="form-label">Дата деактивации от</label>
+                        <input type="datetime-local" class="form-control" id="inputExpirationMin"
+                               name="date_expiration_after" value={{ form.data.date_expiration_after }}>
+                    </div>
+                    <div class="col-6">
+
+                        <label for="inputExpirationMax" class="form-label">Дата деактивации до</label>
+                        <input type="datetime-local" class="form-control" id="inputExpirationMax"
+                               name="date_expiration_before" value={{ form.data.date_expiration_before }}>
+                    </div>
+
+                    <div class="col-12">
+                        <input type="submit" class="btn btn-outline-info"/>
+                    </div>
+                </form>
+            </div>
+            <hr>
+
+            <div class="card-text mt-3">
+                <div class="list-group text-center">
+                    <table class="table table-hover">
+                        <tr>
+                            <th scope="col">Серия</th>
+                            <th scope="col">Номер</th>
+                            <th scope="col">Дата выпуска</th>
+                            <th scope="col">Дата деактивации</th>
+                            <th scope="col">Статус</th>
+                            <th scope="col" colspan="2">Действия</th>
+                        </tr>
+                        {% for card in cards %}
+                            <tr class="table-row" data-href="{% url 'cards-detail' card.pk %}">
+                                <td class="table-link-child">{{ card.series }}</td>
+                                <td class="table-link-child">{{ card.number }}</td>
+                                <td class="table-link-child">{{ card.date_released }}</td>
+                                <td class="table-link-child">{{ card.date_expiration }}</td>
+                            {% if card.is_expired %}
+                            <td class="table-secondary table-link-child" colspan="2">Просрочена</td>
+                            {% else %}
+                                {% if card.is_active %}
+                                    <td class="table-success table-link-child">Активна</td>
+                                    <td class="table-info table-link"
+                                        data-href="{% url 'switch-card-status' card.pk %}">Деактивировать
+                                    </td>
+                                {% else %}
+                                    <td class="table-warning table-link-child">Не активна</td>
+                                    <td class="table-info table-link"
+                                        data-href="{% url 'switch-card-status' card.pk %}">Активировать
+                                    </td>
+                                {% endif %}
+                            {% endif %}
+                                <td class="table-danger table-link"
+                                    data-href="{% url 'cards-delete' card.pk %}">Удалить
+                                </td>
+                            </tr>
+
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+{% endblock content %}
+

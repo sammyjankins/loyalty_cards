@@ -1,0 +1,64 @@
+{% extends "cards/base.html" %}
+{% block content %}
+    <div class="card text-center">
+        <div class="card-body">
+
+
+            <div class="container">
+
+                {% if card.is_expired %}
+                    <h4 class="card-title text-secondary">Просрочена</h4>
+                {% else %}
+                    {% if card.status %}
+                        <h4 class="card-title text-success">Активна</h4>
+                    {% else %}
+                        <h4 class="card-title text-danger">Не активна</h4>
+                    {% endif %}
+                {% endif %}
+                <div class="my-2">
+                    <h5>Серия: {{ card.series }}</h5>
+                    <h5>Номер: {{ card.number }}</h5>
+                    <h5>Дата выпуска: {{ card.date_released }}</h5>
+                    <h5>Дата деактивации: {{ card.date_expiration }}</h5>
+                </div>
+                <div class="form-group mt-3">
+                    {% if not card.is_expired %}
+                        <a class="btn btn-outline-info" href="{% url 'switch-card-status' card.pk %}">
+
+
+                            {% if card.is_active %}
+                                Деактивировать
+                            {% else %}
+                                Активировать
+                            {% endif %}
+                        </a>
+                    {% endif %}
+
+                    <a class="btn btn-outline-danger" href="{% url 'cards-delete' card.pk %}">Удалить</a>
+                </div>
+
+                <div class="card-text mt-3">
+                    <div class="list-group text-center">
+                        <table class="table table-bordered table-hover">
+                            <tr>
+                                <th scope="col">Сумма</th>
+                                <th scope="col">Дата платежа</th>
+                            </tr>
+                            {% for payment in card.get_payments %}
+                                <tr>
+                                    <td>{{ payment.amount }}</td>
+                                    <td>{{ payment.payment_date }}</td>
+                                </tr>
+
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+
+{% endblock content %}
